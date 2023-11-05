@@ -10,6 +10,7 @@ const reportScheme = new Schema(
     tickets: Number,
     ticketMoney: Number,
     redeemedMoney: Number,
+    net: Number,
     createdAt: {
       type: Date,
       default: function () {
