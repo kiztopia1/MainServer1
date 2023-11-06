@@ -145,18 +145,17 @@ app.post("/register", async (req, res) => {
 });
 
 // register new user (betHouse)
-app.post("/addReport", verifyToken, async (req, res) => {
+app.get("/addReport", verifyToken, async (req, res) => {
   try {
-    const { tickets, ticketMoney, redeemedMoney, net } = req.body;
+    const net = req.query.net;
+
     let today = new Date();
     today.setHours(0, 0, 0, 0);
     let data = {
-      tickets: tickets,
-      ticketMoney: ticketMoney,
-      redeemedMoney: redeemedMoney,
       net: net,
       user: req.user._id,
     };
+    console.log(data);
     let existingReport = await Report.findOne({
       user: req.user._id,
       createdAt: today,
