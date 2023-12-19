@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(cors());
 const mongoose = require("mongoose");
 const User = require("./models/User");
+const Email = require("./models/Email");
 const Report = require("./models/Report");
 
 const secretKey =
@@ -118,6 +119,22 @@ app.post("/reg", async (req, res) => {
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+
+app.post("/email", async (req, res) => {
+  try {
+    const { email, username } = req.body;
+
+    // Create a new user with the generated token
+    const user = new Email({ email, username });
+
+    // Save the user to the database
+    await user.save();
+
+    res.status(201).json({ message: "Email is added" });
   } catch (error) {
     res.status(500).json({ error: error });
   }
