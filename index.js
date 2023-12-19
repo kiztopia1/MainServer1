@@ -21,7 +21,19 @@ app.set("view engine", "ejs");
 
 // body parser for the post requests
 app.use(bodyParser.urlencoded({ extended: true }));
+const session = require("express-session");
+const passport = require("passport");
+const auth = require("./auth");
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
+app.use(passport.initialize());
+app.use(passport.session());
 function verifyToken(req, res, next) {
   const token = req.headers.authorization;
 
@@ -76,6 +88,40 @@ db.once("open", () => {
 
 // Routes //
 
+app.post("/login", (req, res, next) => {
+  console.log("Attempting to login:", req.body.email, req.body.password);
+  passport.authenticate("local", (err, user, info) => {
+    console.log("Authenticate callback:", err, user, info);
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ error: "Authentication failed." });
+    }
+    req.logIn(user, (loginErr) => {
+      if (loginErr) {
+        return next(loginErr);
+      }
+      return res.json({ success: "Login successful.", user });
+    });
+  })(req, res, next);
+});
+
+app.post("/reg", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Create a new user with the generated token
+    const user = new User({ email, password });
+
+    // Save the user to the database
+    await user.save();
+
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
 // get current game id
 // Define the time when the game starts (7 am)
 const startTime = new Date();
@@ -182,6 +228,6 @@ app.get("/addReport", verifyToken, async (req, res) => {
 });
 
 // Initialize server
-app.listen(5001, () => {
+app.listen(5000, () => {
   console.log("Running on port 5000.");
 });
