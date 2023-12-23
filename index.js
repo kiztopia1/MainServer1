@@ -13,6 +13,7 @@ const mongoose = require("mongoose");
 const User = require("./models/User");
 const Email = require("./models/Email");
 const Report = require("./models/Report");
+const Goal = require("./models/Goal");
 
 const secretKey =
   "5172112e-efd8-41da-ad4a-f5a8b9e900f15172112e-efd8-41da-ad4a-f5a8b9e900f1";
@@ -119,6 +120,22 @@ app.post("/reg", async (req, res) => {
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+
+app.post("/goal", async (req, res) => {
+  try {
+    const { email, goals, future } = req.body;
+
+    // Create a new user with the generated token
+    const goal = new Goal({ username, goal, future });
+
+    // Save the user to the database
+    await goal.save();
+
+    res.status(201).json({ message: "Goal saved" });
   } catch (error) {
     res.status(500).json({ error: error });
   }
