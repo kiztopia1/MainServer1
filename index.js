@@ -135,9 +135,24 @@ app.post("/goal", async (req, res) => {
     // Save the user to the database
     await goal.save();
 
-    res.status(201).json({ message: "Goal saved" });
+    res.status(201).json(goal);
   } catch (error) {
     res.status(500).json({ error: error });
+  }
+});
+// add preset
+app.post("/updateGoal", async (req, res) => {
+  const { newGoal, id } = req.body;
+  const goal = await Goal.findById(id);
+
+  goal.future = newGoal.future;
+  goal.goals = newGoal.goals;
+
+  goal.save();
+  if (numbers.length == 20) {
+    res.json({ data: user.preSet });
+  } else {
+    res.json({ data: null });
   }
 });
 
