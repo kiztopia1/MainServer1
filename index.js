@@ -130,7 +130,7 @@ app.post("/goal", async (req, res) => {
     const { email, goals, future } = req.body;
 
     // Create a new user with the generated token
-    const goal = new Goal({ username: email, goals, future });
+    const goal = new Goal({ email, goals, future });
 
     // Save the user to the database
     await goal.save();
