@@ -142,11 +142,11 @@ app.post("/goal", async (req, res) => {
 });
 // add preset
 app.post("/updateGoal", async (req, res) => {
-  const { newGoal, id } = req.body;
+  const { future, goals, id } = req.body;
   const goal = await Goal.findById(id);
 
-  goal.future = newGoal.future;
-  goal.goals = newGoal.goals;
+  future = newGoal.future;
+  goals = newGoal.goals;
 
   goal.save();
   if (numbers.length == 20) {
