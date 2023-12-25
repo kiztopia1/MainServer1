@@ -145,8 +145,8 @@ app.post("/updateGoal", async (req, res) => {
   const { future, goals, id } = req.body;
   const goal = await Goal.findById(id);
 
-  future = newGoal.future;
-  goals = newGoal.goals;
+  goal.future = future;
+  goal.goals = goals;
 
   goal.save();
   if (numbers.length == 20) {
