@@ -140,13 +140,33 @@ app.post("/goal", async (req, res) => {
     res.status(500).json({ error: error });
   }
 });
+// get goals
+app.post("/getData", async (req, res) => {
+  const { userId } = req.body;
+  Goal.findOne({ userId })
+    .sort({ createdAt: -1 }) // Sort in descending order based on _id
+    .exec((err, lastInsertedBook) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      if (lastInsertedBook) {
+        console.log("Last inserted book:", lastInsertedBook);
+        res.json({ lastInsertedBook });
+      } else {
+        res.json({});
+      }
+    });
+});
 // add preset
 app.post("/updateGoal", async (req, res) => {
-  const { future, goals, id } = req.body;
+  const { future, goals, id, userId } = req.body;
   const goal = await Goal.findById(id);
 
   goal.future = future;
   goal.goals = goals;
+  goal.userId = userId;
 
   goal.save();
   if (numbers.length == 20) {

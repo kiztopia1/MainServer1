@@ -8,6 +8,7 @@ const goalSchema = new Schema(
       required: false,
     },
     email: { type: String },
+    userId: { type: string },
     future: { type: String },
   },
   { timestamps: true }
